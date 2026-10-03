@@ -54,6 +54,10 @@ export default function Navbar() {
                 <span className="text-[10px] uppercase font-bold tracking-wider px-1.5 py-0.5 rounded bg-blue-100 text-blue-700">
                   GovTech
                 </span>
+                <span className="hidden sm:inline-flex items-center gap-1 text-[10px] font-semibold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                  Chinmay Hackathon
+                </span>
               </div>
               <p className="text-[10px] text-slate-500 font-medium tracking-wide">
                 Report. Track. Resolve.

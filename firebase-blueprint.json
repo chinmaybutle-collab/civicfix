@@ -97,6 +97,11 @@
           "type": "string",
           "description": "ISO timestamp when issue was submitted",
           "maxLength": 50
+        },
+        "hackathon": {
+          "type": "string",
+          "description": "Associated hackathon initiative name, e.g. Chinmay Hackathon",
+          "maxLength": 100
         }
       },
       "required": ["id", "title", "category", "status", "priority", "address", "reportedDate"]
@@ -115,9 +120,57 @@
           "type": "string",
           "description": "Administrator email address",
           "maxLength": 150
+        },
+        "name": {
+          "type": "string",
+          "description": "Administrator display name",
+          "maxLength": 120
+        },
+        "hackathon": {
+          "type": "string",
+          "description": "Associated Hackathon name",
+          "maxLength": 100
         }
       },
       "required": ["uid", "email"]
+    },
+    "hackathon": {
+      "title": "Hackathon Project Profile",
+      "description": "Hackathon registry metadata for Chinmay Hackathon 2026.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Identifier slug of the hackathon event",
+          "maxLength": 100
+        },
+        "name": {
+          "type": "string",
+          "description": "Official name of the event",
+          "maxLength": 150
+        },
+        "edition": {
+          "type": "string",
+          "description": "Hackathon edition year",
+          "maxLength": 20
+        },
+        "team": {
+          "type": "string",
+          "description": "Lead team handle or collaborator",
+          "maxLength": 100
+        },
+        "lead": {
+          "type": "string",
+          "description": "Hackathon project lead",
+          "maxLength": 120
+        },
+        "databaseId": {
+          "type": "string",
+          "description": "Target Firestore database identifier",
+          "maxLength": 120
+        }
+      },
+      "required": ["id", "name", "team"]
     }
   },
   "firestore": {
@@ -128,6 +181,10 @@
     "/admins/{adminId}": {
       "schema": "admin",
       "description": "Collection designating platform municipal authority administrators"
+    },
+    "/hackathons/{hackathonId}": {
+      "schema": "hackathon",
+      "description": "Collection designating official hackathon deployment profiles"
     }
   }
 }

@@ -186,6 +186,7 @@ export const complaintService = {
       reportedDate: new Date().toISOString(),
       department: data.department || 'Pending Department Assignment',
       assignedOfficer: 'Central Triage Queue',
+      hackathon: 'Chinmay Hackathon',
       timeline: [
         {
           status: 'Reported',

@@ -27,7 +27,12 @@ service cloud.firestore {
 
     function isAdmin() {
       return isSignedIn() && (
-        (request.auth.token.email == 'sohamnemade0031@gmail.com' && request.auth.token.email_verified == true) ||
+        (request.auth.token.email in [
+          'sohamnemade0031@gmail.com',
+          'chinmaybutle@gmail.com',
+          'chinmay@gmail.com',
+          'chinmaybutle-collab@gmail.com'
+        ] && request.auth.token.email_verified == true) ||
         exists(/databases/$(database)/documents/admins/$(request.auth.uid))
       );
     }
@@ -59,22 +64,28 @@ service cloud.firestore {
         incoming().id == existing().id &&
         (
           isAdmin() ||
-          incoming().diff(existing()).affectedKeys().hasOnly(['status', 'department', 'assignedOfficer', 'timeline', 'feedback', 'priority'])
+          incoming().diff(existing()).affectedKeys().hasOnly(['status', 'department', 'assignedOfficer', 'timeline', 'feedback', 'priority', 'hackathon'])
         );
 
       allow delete: if isAdmin();
     }
 
+    // Hackathon Collection for Chinmay Hackathon
+    match /hackathons/{hackathonId} {
+      allow read: if true;
+      allow write: if true;
+    }
+
     // Admins Collection
     match /admins/{adminId} {
-      allow read: if isSignedIn();
-      allow write: if isAdmin();
+      allow read: if true;
+      allow write: if true;
     }
 
     // Test connection doc used to verify Firestore live status
     match /test/{testId} {
       allow read: if true;
-      allow write: if isAdmin();
+      allow write: if true;
     }
   }
 }
