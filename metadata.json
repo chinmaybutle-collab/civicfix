@@ -1,0 +1,10 @@
+{
+  "name": "CivicFix - Smart Civic Issue Reporting & Tracking",
+  "description": "Empowering citizens and municipal authorities to report, track, and resolve local civic issues with real-time tracking, interactive maps, and analytics.",
+  "requestFramePermissions": [
+    "geolocation"
+  ],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
