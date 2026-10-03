@@ -1,4 +1,6 @@
 import { createContext, useContext, useState, useEffect } from 'react';
+import { onAuthStateChanged, signInWithPopup, signOut } from 'firebase/auth';
+import { auth, googleProvider } from '../services/firebase';
 
 const AuthContext = createContext();
 
@@ -34,10 +36,39 @@ export function AuthProvider({ children }) {
         return DEMO_CITIZEN;
       }
     }
-    return DEMO_CITIZEN; // Default to demo citizen for seamless evaluation
+    return DEMO_CITIZEN;
   });
 
   const [notificationCount, setNotificationCount] = useState(2);
+  const [authLoading, setAuthLoading] = useState(true);
+
+  // Sync with Firebase Auth state
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
+      setAuthLoading(false);
+      if (firebaseUser) {
+        const isAuthAuthority =
+          firebaseUser.email?.includes('gov') ||
+          firebaseUser.email?.includes('admin') ||
+          firebaseUser.email === 'sohamnemade0031@gmail.com';
+
+        const enrichedUser = {
+          id: firebaseUser.uid,
+          name: firebaseUser.displayName || firebaseUser.email?.split('@')[0] || 'Civic User',
+          email: firebaseUser.email || '',
+          photoURL: firebaseUser.photoURL || null,
+          role: isAuthAuthority ? 'authority' : 'citizen',
+          ward: 'Ward 1 - Central Business District',
+          city: 'Metro City',
+          avatar: (firebaseUser.displayName || firebaseUser.email || 'CU').substring(0, 2).toUpperCase()
+        };
+        setUser(enrichedUser);
+        localStorage.setItem('civicfix_current_user', JSON.stringify(enrichedUser));
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
 
   useEffect(() => {
     if (user) {
@@ -46,6 +77,16 @@ export function AuthProvider({ children }) {
       localStorage.removeItem('civicfix_current_user');
     }
   }, [user]);
+
+  const signInWithGoogle = async () => {
+    try {
+      const result = await signInWithPopup(auth, googleProvider);
+      return result.user;
+    } catch (err) {
+      console.error('Firebase Google Sign-In Error:', err);
+      throw err;
+    }
+  };
 
   const login = (email, password, role = 'citizen') => {
     if (role === 'authority' || email.includes('gov') || email.includes('admin') || email.includes('authority')) {
@@ -90,7 +131,10 @@ export function AuthProvider({ children }) {
     return newUser;
   };
 
-  const logout = () => {
+  const logout = async () => {
+    try {
+      await signOut(auth);
+    } catch (_) {}
     setUser(null);
   };
 
@@ -112,10 +156,12 @@ export function AuthProvider({ children }) {
         login,
         loginAsDemoCitizen,
         loginAsDemoAuthority,
+        signInWithGoogle,
         register,
         logout,
         switchRole,
-        notificationCount
+        notificationCount,
+        authLoading
       }}
     >
       {children}

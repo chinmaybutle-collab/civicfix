@@ -1,5 +1,35 @@
 [
   {
+    "id": "CIV-2026-00107",
+    "category": "Garbage & Waste",
+    "categoryId": "garbage",
+    "title": "Garbage & Waste reported at GPS Pin (28.6156, 77.2008) - Ward 1",
+    "description": "health care issue ascdvdsb",
+    "location": {
+      "address": "GPS Pin (28.6156, 77.2008) - Ward 1",
+      "lat": 28.61557,
+      "lng": 77.20084,
+      "ward": "Ward 1 - Central Business District"
+    },
+    "imageUrl": "https://images.unsplash.com/photo-1515162816999-a0c47dc192f7?w=600&auto=format&fit=crop&q=80",
+    "status": "Reported",
+    "priority": "High",
+    "citizenName": "Rahul Sharma",
+    "citizenPhone": "+91 98765 43210",
+    "citizenEmail": "rahul.citizen@civicfix.org",
+    "reportedDate": "2026-10-03T08:36:12.424Z",
+    "department": "Pending Department Assignment",
+    "assignedOfficer": "Central Triage Queue",
+    "timeline": [
+      {
+        "status": "Reported",
+        "date": "2026-10-03T08:36:12.424Z",
+        "note": "Complaint registered by citizen with geolocation and image verification."
+      }
+    ],
+    "feedback": null
+  },
+  {
     "id": "CIV-2026-00108",
     "category": "Pothole",
     "categoryId": "pothole",

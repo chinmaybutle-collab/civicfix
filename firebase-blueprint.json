@@ -1,0 +1,133 @@
+{
+  "entities": {
+    "complaint": {
+      "title": "Civic Complaint Report",
+      "description": "A civic issue or complaint reported by a citizen with location, media, priority, and department tracking.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique complaint reference identifier, e.g. CIV-2026-00101",
+          "maxLength": 64
+        },
+        "title": {
+          "type": "string",
+          "description": "Summary title of the issue",
+          "maxLength": 200
+        },
+        "description": {
+          "type": "string",
+          "description": "Detailed description of the civic problem",
+          "maxLength": 2000
+        },
+        "category": {
+          "type": "string",
+          "description": "Category name such as Pothole, Streetlight, Garbage & Waste",
+          "maxLength": 100
+        },
+        "categoryId": {
+          "type": "string",
+          "description": "Slug of category, e.g. pothole, streetlight",
+          "maxLength": 64
+        },
+        "status": {
+          "type": "string",
+          "description": "Current resolution status",
+          "enum": ["Reported", "Verified", "Assigned", "In Progress", "Resolved", "Closed"]
+        },
+        "priority": {
+          "type": "string",
+          "description": "Urgency priority level",
+          "enum": ["Low", "Medium", "High", "Critical"]
+        },
+        "department": {
+          "type": "string",
+          "description": "Assigned civic department",
+          "maxLength": 120
+        },
+        "assignedOfficer": {
+          "type": "string",
+          "description": "Name or designation of assigned personnel",
+          "maxLength": 120
+        },
+        "citizenId": {
+          "type": "string",
+          "description": "User ID of reporting citizen or system user",
+          "maxLength": 128
+        },
+        "citizenName": {
+          "type": "string",
+          "description": "Name of citizen reporter",
+          "maxLength": 120
+        },
+        "citizenEmail": {
+          "type": "string",
+          "description": "Email address of citizen",
+          "maxLength": 150
+        },
+        "citizenPhone": {
+          "type": "string",
+          "description": "Phone number of citizen",
+          "maxLength": 30
+        },
+        "imageUrl": {
+          "type": "string",
+          "description": "URL or data URI of evidence photo",
+          "maxLength": 1000000
+        },
+        "address": {
+          "type": "string",
+          "description": "Street or landmark address",
+          "maxLength": 250
+        },
+        "ward": {
+          "type": "string",
+          "description": "Municipal ward zone",
+          "maxLength": 120
+        },
+        "lat": {
+          "type": "number",
+          "description": "Latitude coordinate"
+        },
+        "lng": {
+          "type": "number",
+          "description": "Longitude coordinate"
+        },
+        "reportedDate": {
+          "type": "string",
+          "description": "ISO timestamp when issue was submitted",
+          "maxLength": 50
+        }
+      },
+      "required": ["id", "title", "category", "status", "priority", "address", "reportedDate"]
+    },
+    "admin": {
+      "title": "Platform Administrator",
+      "description": "Administrative authority record allowing full dispatch and moderation privileges.",
+      "type": "object",
+      "properties": {
+        "uid": {
+          "type": "string",
+          "description": "Firebase Auth UID of administrator",
+          "maxLength": 128
+        },
+        "email": {
+          "type": "string",
+          "description": "Administrator email address",
+          "maxLength": 150
+        }
+      },
+      "required": ["uid", "email"]
+    }
+  },
+  "firestore": {
+    "/complaints/{complaintId}": {
+      "schema": "complaint",
+      "description": "Collection of all public civic issues and incident reports"
+    },
+    "/admins/{adminId}": {
+      "schema": "admin",
+      "description": "Collection designating platform municipal authority administrators"
+    }
+  }
+}

@@ -1,0 +1,80 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Global default-deny safety catch-all
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Helper functions
+    function isValidId(id) {
+      return id is string && id.size() > 0 && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return isSignedIn() && (
+        (request.auth.token.email == 'sohamnemade0031@gmail.com' && request.auth.token.email_verified == true) ||
+        exists(/databases/$(database)/documents/admins/$(request.auth.uid))
+      );
+    }
+
+    function isValidComplaint(data) {
+      return data.keys().hasAll(['id', 'title', 'category', 'status', 'priority', 'reportedDate']) &&
+        data.id is string && data.id.size() <= 64 &&
+        data.title is string && data.title.size() > 0 && data.title.size() <= 200 &&
+        data.category is string && data.category.size() <= 100 &&
+        data.status in ['Reported', 'Verified', 'Assigned', 'In Progress', 'Resolved', 'Closed'] &&
+        data.priority in ['Low', 'Medium', 'High', 'Critical'] &&
+        data.reportedDate is string && data.reportedDate.size() <= 50 &&
+        (!('description' in data) || (data.description is string && data.description.size() <= 2000)) &&
+        (!('citizenName' in data) || (data.citizenName is string && data.citizenName.size() <= 120)) &&
+        (!('citizenEmail' in data) || (data.citizenEmail is string && data.citizenEmail.size() <= 150)) &&
+        (!('citizenPhone' in data) || (data.citizenPhone is string && data.citizenPhone.size() <= 30)) &&
+        (!('department' in data) || (data.department is string && data.department.size() <= 120)) &&
+        (!('assignedOfficer' in data) || (data.assignedOfficer is string && data.assignedOfficer.size() <= 120));
+    }
+
+    // Complaints / Reports Collection
+    match /complaints/{complaintId} {
+      allow get, list: if true;
+
+      allow create: if isValidId(complaintId) && isValidComplaint(incoming());
+
+      allow update: if isValidId(complaintId) &&
+        isValidComplaint(incoming()) &&
+        incoming().id == existing().id &&
+        (
+          isAdmin() ||
+          incoming().diff(existing()).affectedKeys().hasOnly(['status', 'department', 'assignedOfficer', 'timeline', 'feedback', 'priority'])
+        );
+
+      allow delete: if isAdmin();
+    }
+
+    // Admins Collection
+    match /admins/{adminId} {
+      allow read: if isSignedIn();
+      allow write: if isAdmin();
+    }
+
+    // Test connection doc used to verify Firestore live status
+    match /test/{testId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+  }
+}

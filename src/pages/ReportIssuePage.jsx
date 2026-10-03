@@ -163,6 +163,7 @@ export default function ReportIssuePage() {
         ward,
         priority,
         imageUrl: imageUrl || SAMPLE_CIVIC_PHOTOS[0].url,
+        citizenId: user?.id || 'citizen_anon',
         citizenName: isAnonymous ? 'Anonymous Citizen' : citizenName || 'Concerned Citizen',
         citizenPhone: isAnonymous ? 'Hidden' : citizenPhone || '+91 98000 00000',
         citizenEmail: isAnonymous ? 'Hidden' : citizenEmail || 'citizen@civicfix.org'
